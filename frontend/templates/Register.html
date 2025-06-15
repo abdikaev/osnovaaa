@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduPath Register</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand-primary: #6C4DFF;
+      --bg-main: #F9F9FB;
+      --bg-secondary: #EDEDED;
+      --text-main: #1C1C1E;
+      --text-secondary: rgba(60, 60, 67, 0.6);
+      --border-color: #D1D1D6;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <main class="flex-1 flex items-center justify-center px-4">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6 border border-[var(--border-color)]">
+      <h2 class="text-2xl font-bold text-center">Регистрация</h2>
+
+      {% if error %}
+        <div class="text-red-600 text-sm text-center">{{ error }}</div>
+      {% endif %}
+
+      <form method="post" action="{% url 'register' %}" class="space-y-4">
+        {% csrf_token %}
+        <input type="text" name="username" required placeholder="Имя пользователя"
+               class="w-full border border-[var(--border-color)] px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]" />
+        <input type="email" name="email" required placeholder="Email"
+               class="w-full border border-[var(--border-color)] px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]" />
+        <input type="password" name="password1" required placeholder="Пароль"
+               class="w-full border border-[var(--border-color)] px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]" />
+        <input type="password" name="password2" required placeholder="Повторите пароль"
+               class="w-full border border-[var(--border-color)] px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--brand-primary)]" />
+        <button type="submit"
+                class="w-full bg-[var(--brand-primary)] hover:bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
+          Зарегистрироваться
+        </button>
+      </form>
+
+      <p class="text-center text-sm text-[var(--text-secondary)]">
+        Уже есть аккаунт?
+        <a href="{% url 'login' %}" class="text-[var(--brand-primary)] hover:underline">Войти</a>
+      </p>
+    </div>
+  </main>
+
+</body>
+</html>

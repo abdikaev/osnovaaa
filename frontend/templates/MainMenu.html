@@ -1,0 +1,217 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>EduPath — Онлайн обучение</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-primary: #6C4DFF;
+      --color-bg: #F9F9FB;
+      --color-bg-secondary: #EDEDED;
+      --color-text: #1C1C1E;
+      --color-text-secondary: rgba(60, 60, 67, 0.6);
+      --color-border: #D1D1D6;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    .text-secondary { color: var(--color-text-secondary); }
+
+    #mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-in-out;
+    }
+    #mobile-menu.open { max-height: 1000px; }
+
+    #mobile-menu-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 40;
+      transition: opacity 0.3s ease-in-out;
+    }
+    #mobile-menu-backdrop.show { display: block; opacity: 1; }
+
+    #mobile-menu a,
+    #mobile-menu button {
+      font-size: 1.125rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: 1rem;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    #mobile-menu a:hover,
+    #mobile-menu button:hover {
+      color: var(--color-primary);
+    }
+
+    #mobile-btn svg {
+      width: 28px;
+      height: 28px;
+      stroke: var(--color-text);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header class="bg-white border-b border-[var(--color-bg-secondary)] sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <img src="{% static 'Icons/Logo.png' %}" alt="EduPath Logo" class="h-9 md:h-10" />
+      <nav class="hidden md:flex space-x-8 text-sm font-medium">
+        <a href="{% url 'main_menu' %}" class="hover:text-[var(--color-primary)]">Главная</a>
+        <a href="{% url 'course_view' %}?course_id=1" class="hover:text-[var(--color-primary)]">Курсы</a>
+        <a href="{% url 'about' %}" class="hover:text-[var(--color-primary)]">О нас</a>
+        <a href="{% url 'contacts' %}" class="hover:text-[var(--color-primary)]">Контакты</a>
+      </nav>
+      <div class="hidden md:flex items-center gap-4">
+        <a href="{% url 'login' %}" class="text-[var(--color-primary)] hover:underline text-sm font-medium">Войти</a>
+        <a href="{% url 'register' %}" class="bg-[var(--color-primary)] hover:bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">Регистрация</a>
+      </div>
+      <button id="mobile-btn" class="md:hidden" aria-label="Открыть меню" type="button" aria-expanded="false" aria-controls="mobile-menu">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+    <div id="mobile-menu-backdrop" tabindex="-1"></div>
+    <nav id="mobile-menu" class="md:hidden flex flex-col px-6 pb-6 space-y-4 text-base font-medium bg-white border-t border-[var(--color-bg-secondary)] z-50 relative" aria-label="Мобильное меню">
+      <a href="{% url 'main_menu' %}" class="hover:text-[var(--color-primary)]">Главная</a>
+      <a href="{% url 'course_view' %}?course_id=1" class="hover:text-[var(--color-primary)]">Курсы</a>
+      <a href="{% url 'about' %}" class="hover:text-[var(--color-primary)]">О нас</a>
+      <a href="{% url 'contacts' %}" class="hover:text-[var(--color-primary)]">Контакты</a>
+      <div class="flex flex-col gap-4 mt-4">
+        <a href="{% url 'login' %}" class="text-[var(--color-primary)] hover:underline w-full text-center">Войти</a>
+        <a href="{% url 'register' %}" class="bg-[var(--color-primary)] hover:bg-indigo-600 text-white w-full rounded-xl font-semibold transition py-3 text-center">Регистрация</a>
+      </div>
+    </nav>
+  </header>
+
+  <section class="max-w-7xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+    <div>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+        Начни обучение <span class="text-[var(--color-primary)]">сегодня</span>
+      </h1>
+      <p class="text-secondary text-lg mb-8">
+        Лучшие онлайн-курсы по дизайну, программированию, маркетингу и многому другому. От практикующих экспертов.
+      </p>
+      <div class="flex gap-4 flex-wrap">
+        <a href="#" class="bg-[var(--color-primary)] hover:bg-indigo-600 text-white font-semibold text-base px-6 py-3 rounded-xl transition">Начать бесплатно</a>
+        <a href="#" class="text-[var(--color-primary)] font-medium hover:underline text-base">Узнать больше</a>
+      </div>
+    </div>
+    <div>
+      <img src="{% static 'Icons/small-team-discussing-ideas-2194220-0.png' %}" alt="Hero Illustration" class="w-full max-w-md mx-auto h-auto" />
+    </div>
+  </section>
+
+  <section class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold mb-10 text-center">Курсы, которые вам понравятся</h2>
+      <div class="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <article class="bg-[var(--color-bg)] rounded-2xl shadow hover:shadow-xl transition overflow-hidden">
+          <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="UI Design" class="w-full h-48 object-cover" />
+          <div class="p-6">
+            <h3 class="text-xl font-semibold mb-2">UI Design & 3D</h3>
+            <p class="text-secondary text-sm mb-4">Создавайте современные интерфейсы с Figma и Blender.</p>
+            <a href="{% url 'video_detail' %}" class="text-[var(--brand-primary)] hover:underline text-sm font-medium">Подробнее</a>
+
+
+
+
+
+
+          </div>
+        </article>
+        <article class="bg-[var(--color-bg)] rounded-2xl shadow hover:shadow-xl transition overflow-hidden">
+          <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="Python" class="w-full h-48 object-cover" />
+          <div class="p-6">
+            <h3 class="text-xl font-semibold mb-2">Python для начинающих</h3>
+            <p class="text-secondary text-sm mb-4">Изучите синтаксис, условия, циклы и основы ООП.</p>
+            <a href="{% url 'video_detail2' %}" class="text-[var(--brand-primary)] hover:underline text-sm font-medium">Подробнее</a>
+
+
+
+
+
+          </div>
+        </article>
+        <article class="bg-[var(--color-bg)] rounded-2xl shadow hover:shadow-xl transition overflow-hidden">
+          <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="JS" class="w-full h-48 object-cover" />
+          <div class="p-6">
+            <h3 class="text-xl font-semibold mb-2">Advanced JavaScript</h3>
+            <p class="text-secondary text-sm mb-4">Глубокое понимание JS: замыкания, async/await, React.</p>
+           <a href="{% url 'video_detail3' %}" class="text-[var(--brand-primary)] hover:underline text-sm font-medium">Подробнее</a>
+
+
+
+
+
+
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-white border-t border-[var(--color-bg-secondary)] mt-auto py-10 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <div>
+        <img src="{% static 'Icons/Logo.png' %}" alt="EduPath Logo" class="h-10 mb-4" />
+        <p class="text-secondary text-sm max-w-xs">Платформа для изучения UI дизайна и 3D иллюстраций.</p>
+      </div>
+      <div>
+        <h3 class="font-semibold mb-3">Курсы</h3>
+        <ul class="space-y-2 text-sm text-secondary">
+          <li><a href="#" class="hover:text-[var(--color-primary)]">UI Design</a></li>
+          <li><a href="#" class="hover:text-[var(--color-primary)]">3D Illustration</a></li>
+          <li><a href="#" class="hover:text-[var(--color-primary)]">Figma Basics</a></li>
+          <li><a href="#" class="hover:text-[var(--color-primary)]">UX Research</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold mb-3">Компании</h3>
+        <ul class="space-y-2 text-sm text-secondary">
+          <li><a href="#" class="hover:text-[var(--color-primary)]">Apple</a></li>
+          <li><a href="#" class="hover:text-[var(--color-primary)]">Google</a></li>
+          <li><a href="#" class="hover:text-[var(--color-primary)]">Meta</a></li>
+          <li><a href="#" class="hover:text-[var(--color-primary)]">Amazon</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold mb-3">Контакты</h3>
+        <ul class="space-y-2 text-sm text-secondary">
+          <li>email@example.com</li>
+          <li>+7 (123) 456-78-90</li>
+          <li>г. Москва, ул. Пушкина, д. 10</li>
+          <li><a href="#" class="hover:text-[var(--color-primary)]">Политика конфиденциальности</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.getElementById('mobile-btn');
+    const menu = document.getElementById('mobile-menu');
+    const backdrop = document.getElementById('mobile-menu-backdrop');
+
+    function toggleMenu() {
+      const isOpen = menu.classList.toggle('open');
+      backdrop.classList.toggle('show', isOpen);
+      btn.setAttribute('aria-expanded', isOpen);
+    }
+
+    btn.addEventListener('click', toggleMenu);
+    backdrop.addEventListener('click', toggleMenu);
+  </script>
+</body>
+</html>

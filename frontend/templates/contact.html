@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Контакты — EduPath</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen flex flex-col bg-gradient-to-br from-violet-100 to-white text-gray-800">
+
+  <main class="flex-grow max-w-3xl mx-auto py-12 px-6 bg-white rounded-xl shadow-lg mt-10 mb-6">
+    <h1 class="text-4xl font-bold mb-6 text-center text-violet-700">Свяжитесь с нами</h1>
+
+    <p class="mb-4 text-gray-700">Если у вас есть вопросы, предложения или проблемы — пожалуйста, напишите нам:</p>
+
+    <ul class="space-y-3 text-gray-700">
+      <li><strong>📧 Email:</strong> <a href="mailto:support@edupath.kz" class="text-blue-600 hover:underline">support@edupath.kz</a></li>
+      <li><strong>📞 Телефон:</strong> +7 (777) 123-45-67</li>
+      <li><strong>📍 Адрес:</strong> г. Алматы, ул. Знаний, 1</li>
+    </ul>
+
+    <p class="text-sm text-gray-500 mt-8">Мы обычно отвечаем в течение 1–2 рабочих дней.</p>
+  </main>
+
+  {% include 'partials/footer.html' %}
+
+</body>
+</html>

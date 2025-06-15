@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduPath Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand-primary: #6C4DFF;
+      --bg-main: #F9F9FB;
+      --bg-secondary: #EDEDED;
+      --text-main: #1C1C1E;
+      --text-secondary: rgba(60, 60, 67, 0.6);
+      --border-color: #D1D1D6;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 2px rgba(108, 77, 255, 0.2);
+    }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <main class="flex-1 flex items-center justify-center px-4">
+    <div class="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 space-y-6 border border-[var(--border-color)]">
+      <h2 class="text-2xl font-bold text-center">Войти в аккаунт</h2>
+
+      {% if error %}
+        <div class="text-red-600 text-sm text-center">{{ error }}</div>
+      {% endif %}
+
+      <form method="POST" action="/login/" class="space-y-4">
+        {% csrf_token %}
+        <div>
+          <label for="username" class="block text-sm font-medium">Логин</label>
+          <input id="username" name="username" type="text" required
+                 class="w-full px-4 py-2 border rounded-lg border-[var(--border-color)] bg-white" />
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-medium">Пароль</label>
+          <input id="password" name="password" type="password" required
+                 class="w-full px-4 py-2 border rounded-lg border-[var(--border-color)] bg-white" />
+        </div>
+
+        <button type="submit"
+                class="w-full bg-[var(--brand-primary)] text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">
+          Войти
+        </button>
+      </form>
+
+      <p class="text-center text-sm text-[var(--text-secondary)]">
+        Нет аккаунта?
+        <a href="{% url 'register' %}" class="text-[var(--brand-primary)] hover:underline">Зарегистрироваться</a>
+      </p>
+    </div>
+  </main>
+
+  <!-- Футер -->
+  <footer class="bg-white border-t border-[var(--bg-secondary)] py-6 text-center text-sm text-[var(--text-secondary)]">
+    © 2025 EduPath. <a href="{% url 'about' %}" class="hover:underline">О нас</a> •
+    <a href="{% url 'contacts' %}" class="hover:underline">Контакты</a> •
+    <a href="{% url 'terms' %}" class="hover:underline">Условия</a>
+  </footer>
+
+</body>
+</html>

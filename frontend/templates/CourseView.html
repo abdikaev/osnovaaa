@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Просмотр курса — EduPath</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand-primary: #6C4DFF;
+      --bg-main: #F9F9FB;
+      --bg-secondary: #EDEDED;
+      --text-main: #1C1C1E;
+      --text-secondary: rgba(60, 60, 67, 0.6);
+      --border-color: #D1D1D6;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+    }
+    .course-hero {
+      background-image: url("{% static 'icons/aa8625109287767.5fd08439c7676.jpg' %}");
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <header class="bg-white border-b border-[var(--bg-secondary)] sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <img src="{% static 'Icons/Logo.png' %}" alt="EduPath Logo" class="h-9 md:h-10" />
+      <button class="text-[var(--brand-primary)] hover:underline text-sm font-medium" onclick="window.location.href='{% url 'main_menu' %}'">
+        Назад
+      </button>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col">
+    <section class="course-hero relative h-[380px] md:h-[480px]">
+      <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+      <div class="relative z-10 max-w-4xl mx-auto h-full flex flex-col justify-center items-center text-center text-white px-4">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4" id="course-title">Название курса</h1>
+        <p class="text-lg mb-2" id="course-author">Автор</p>
+        <p class="text-sm opacity-90" id="lesson-count">0 уроков • 0 минут</p>
+      </div>
+    </section>
+
+    <section class="max-w-7xl mx-auto px-6 py-10">
+      <h2 class="text-2xl font-semibold mb-6">Содержание курса</h2>
+      <div class="grid gap-4 lg:grid-cols-2" id="lesson-list"></div>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t border-[var(--bg-secondary)] py-8 px-6 text-center text-sm text-[var(--text-secondary)]">
+    © 2025 EduPath. Все права защищены.
+  </footer>
+
+  <!-- Кнопка чата -->
+  <button onclick="toggleChat()" class="fixed bottom-4 right-4 bg-[var(--brand-primary)] text-white px-4 py-2 rounded-full shadow-lg hover:bg-indigo-700 transition">
+    💬 Чат
+  </button>
+
+  <!-- Окно чата -->
+  <div id="chatBox" class="hidden fixed bottom-20 right-4 w-80 h-96 bg-white border rounded-xl shadow-lg flex flex-col">
+    <div class="bg-[var(--brand-primary)] text-white p-2 rounded-t-xl flex justify-between items-center">
+      <span>Чат поддержки</span>
+      <button onclick="toggleChat()">✖</button>
+    </div>
+    <div class="flex-1 p-2 overflow-y-auto text-sm" id="chatMessages">
+      <p class="text-gray-500">Напишите ваше сообщение...</p>
+    </div>
+    <div class="p-2 border-t">
+      <input type="text" id="chatInput" placeholder="Введите сообщение..." class="w-full border rounded px-2 py-1 text-sm" onkeydown="handleSend(event)">
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+      const params = new URLSearchParams(window.location.search);
+      const courseId = params.get('course_id');
+      if (!courseId) {
+        window.location.href = "{% url 'main_menu' %}";
+        return;
+      }
+
+      try {
+        const response = await fetch(`http://localhost:8000/api/courses/${courseId}/`);
+        const course = await response.json();
+
+        document.getElementById('course-title').textContent = course.title;
+        document.getElementById('course-author').textContent = `Автор: ${course.instructor.username}`;
+
+        const lessonsRes = await fetch(`http://localhost:8000/api/courses/${courseId}/lessons/`);
+        const lessons = await lessonsRes.json();
+
+        document.getElementById('lesson-count').textContent =
+          `${lessons.length} уроков • ${formatDuration(lessons.reduce((sum, l) => sum + l.duration, 0))}`;
+
+        const container = document.getElementById('lesson-list');
+        lessons.forEach(lesson => {
+          const el = document.createElement('div');
+          el.className = 'flex items-center p-4 bg-white rounded-xl shadow border border-[var(--border-color)]';
+          el.innerHTML = `
+            <img src="{% static 'Icons/play-icon.png' %}" alt="▶" class="w-10 h-10 mr-4" />
+            <div class="flex-1">
+              <p class="font-medium">${lesson.title}</p>
+              <p class="text-xs text-[var(--text-secondary)]">${formatDuration(lesson.duration)}</p>
+            </div>
+            <span class="text-xs text-[var(--text-secondary)]">00:00</span>
+          `;
+          container.appendChild(el);
+        });
+      } catch (err) {
+        console.error('Ошибка загрузки курса:', err);
+      }
+
+      function formatDuration(seconds) {
+        const mins = Math.floor(seconds / 60);
+        return `${mins} мин`;
+      }
+    });
+
+    function toggleChat() {
+      const chat = document.getElementById('chatBox');
+      chat.classList.toggle('hidden');
+    }
+
+    function handleSend(e) {
+      if (e.key === 'Enter') {
+        const input = document.getElementById('chatInput');
+        const message = input.value.trim();
+        if (message) {
+          const chatBox = document.getElementById('chatMessages');
+          const msgEl = document.createElement('div');
+          msgEl.textContent = message;
+          msgEl.className = "bg-gray-100 p-2 my-1 rounded";
+          chatBox.appendChild(msgEl);
+          input.value = '';
+          chatBox.scrollTop = chatBox.scrollHeight;
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>

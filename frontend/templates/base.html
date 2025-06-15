@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}EduPath{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand-primary: #6C4DFF;
+      --bg-main: #F9F9FB;
+      --bg-secondary: #EDEDED;
+      --text-main: #1C1C1E;
+      --text-secondary: rgba(60, 60, 67, 0.6);
+      --border-color: #D1D1D6;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Хедер -->
+  <header class="bg-white border-b border-[var(--bg-secondary)] sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <img src="{% static 'Icons/Logo.png' %}" alt="EduPath Logo" class="h-9 md:h-10" />
+      <a href="{% url 'main_menu' %}" class="text-[var(--brand-primary)] hover:underline text-sm font-medium">Назад</a>
+    </div>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="flex-1">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Футер -->
+  <footer class="bg-white border-t border-[var(--bg-secondary)] py-8 px-6 text-center text-sm text-[var(--text-secondary)]">
+    © 2025 EduPath. Все права защищены.
+  </footer>
+
+</body>
+</html>

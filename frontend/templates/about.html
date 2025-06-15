@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>О нас — EduPath</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/css-doodle@0.36.0/css-doodle.min.js"></script>
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      contain: content;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    /* Волны */
+    .wave-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      background: #d0dff3;
+      overflow: hidden;
+    }
+
+    .air {
+      position: absolute;
+      width: 100%;
+      height: 100px;
+      background: url('https://1.bp.blogspot.com/-xQUc-TovqDk/XdxogmMqIRI/AAAAAAAACvI/AizpnE509UMGBcTiLJ58BC6iViPYGYQfQCLcBGAsYHQ/s1600/wave.png');
+      background-size: 1000px 100px;
+      background-repeat: repeat-x;
+    }
+
+    .air1 { bottom: 0; animation: wave 30s linear infinite; opacity: 1; }
+    .air2 { bottom: 10px; animation: wave2 15s linear infinite; opacity: 0.5; }
+    .air3 { bottom: 15px; animation: wave 30s linear infinite; opacity: 0.2; }
+    .air4 { bottom: 20px; animation: wave2 5s linear infinite; opacity: 0.7; }
+
+    @keyframes wave {
+      0% { background-position-x: 0; }
+      100% { background-position-x: 1000px; }
+    }
+
+    @keyframes wave2 {
+      0% { background-position-x: 0; }
+      100% { background-position-x: -1000px; }
+    }
+
+    css-doodle {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    main, footer {
+      position: relative;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Волны -->
+  <div class="wave-background">
+    <div class="air air1"></div>
+    <div class="air air2"></div>
+    <div class="air air3"></div>
+    <div class="air air4"></div>
+  </div>
+
+  <!-- Мелкие пузырьки -->
+  <css-doodle>
+    <style>
+      @grid: 60x1 / 100vmin;
+      :container {
+        perspective: 20vmin;
+      }
+
+      background: @m(
+        @r(150, 200), 
+        radial-gradient(
+          @p(#00b8a9, #f8f3d4, #f6416c, #ffde7d) 10%,
+          transparent 50%
+        ) @r(100%) @r(100%) / @r(0.5%, 1.5%) @lr no-repeat
+      );
+
+      @size: 20%;
+      @place-cell: center;
+      border-radius: 50%;
+      transform-style: preserve-3d;
+      animation: scale-up 25s linear infinite;
+      animation-delay: calc(@i * -0.3s);
+
+      @keyframes scale-up {
+        0% {
+          opacity: 0;
+          transform: translate3d(0, 0, 0) rotate(0);
+        }
+        10% { opacity: 0.6; }
+        95% {
+          transform: translate3d(0, 0, @r(20vmin, 30vmin))
+                     rotate(@r(-180deg, 180deg));
+        }
+        100% {
+          opacity: 0;
+          transform: translate3d(0, 0, 1vmin);
+        }
+      }
+    </style>
+  </css-doodle>
+
+  <!-- Контент -->
+  <main class="flex-grow flex items-center justify-center w-full">
+    <div class="max-w-3xl bg-white bg-opacity-90 rounded-xl shadow-lg p-10 mt-20 mb-10 text-center">
+      <h1 class="text-4xl font-bold mb-6 text-violet-700">О нас</h1>
+      <p class="text-gray-700 text-lg leading-relaxed">
+        EduPath — это современная образовательная платформа, созданная для того, чтобы сделать знания доступными каждому.
+        Мы предлагаем онлайн-курсы по программированию, дизайну, бизнесу и другим направлениям, разработанные экспертами.
+      </p>
+      <p class="mt-4 text-gray-700">
+        Наша цель — дать каждому возможность учиться в удобном темпе и в любом месте. Мы верим, что образование — это ключ к личному и профессиональному росту.
+      </p>
+    </div>
+  </main>
+
+  <!-- Футер -->
+  <footer class="bg-violet-700 text-white text-center py-4 w-full">
+    <p class="text-sm">© 2025 EduPath. Все права защищены.</p>
+    <div class="text-sm mt-1">
+      <a href="#" class="mx-2 hover:underline">О нас</a>
+      <a href="#" class="mx-2 hover:underline">Контакты</a>
+      <a href="#" class="mx-2 hover:underline">Условия</a>
+    </div>
+  </footer>
+
+</body>
+</html>
