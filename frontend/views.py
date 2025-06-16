@@ -92,4 +92,10 @@ def teacher_dashboard(request):
     return render(request, 'teacher_dashboard.html')
 
 
+def tutors_view(request):
+    """Display the tutors catalog for students."""
+    return render(request, 'tutors.html')
+
+
+
 

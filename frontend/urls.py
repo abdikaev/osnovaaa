@@ -9,6 +9,7 @@ urlpatterns = [
     path('select-role/', views.select_role, name='select_role'),
     path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
     path('teacher/dashboard/', views.teacher_dashboard, name='teacher_dashboard'),
+    path('tutors/', views.tutors_view, name='tutors'),
     path('course/', views.course_view, name='course_view'),
 
     # Футер-страницы
