@@ -6,6 +6,11 @@ class CustomUser(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
     bio = models.TextField(blank=True)
+    ROLE_CHOICES = [
+        ('student', 'Student'),
+        ('teacher', 'Teacher'),
+    ]
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, blank=True)
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

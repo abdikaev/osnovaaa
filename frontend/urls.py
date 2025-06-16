@@ -7,6 +7,8 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),
     path('register/', views.register, name='register'),
     path('select-role/', views.select_role, name='select_role'),
+    path('student/dashboard/', views.student_dashboard, name='student_dashboard'),
+    path('teacher/dashboard/', views.teacher_dashboard, name='teacher_dashboard'),
     path('course/', views.course_view, name='course_view'),
 
     # Футер-страницы
@@ -19,3 +21,4 @@ urlpatterns = [
     path('course/video2/', TemplateView.as_view(template_name='video_detail2.html'), name='video_detail2'),
     path('course/video3/', TemplateView.as_view(template_name='video_detail3.html'), name='video_detail3'),
 ]
+

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -13,12 +14,17 @@ def main_menu(request):
 # Вход в систему
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
 
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
+            if user.role:
+                if user.role == 'teacher':
+                    return redirect('teacher_dashboard')
+                else:
+                    return redirect('student_dashboard')
             return redirect('select_role')
         else:
             return render(request, 'Login.html', {'error': 'Неверный логин или пароль'})
@@ -66,4 +72,24 @@ def terms_view(request):
 
 # Страница выбора роли
 def select_role(request):
-    return render(request, 'select_role.html')
+        if request.method == 'POST':
+            role = request.POST.get('role')
+            if role in ['student', 'teacher']:
+                request.user.role = role
+                request.user.save()
+                if role == 'student':
+                    return redirect('student_dashboard')
+                else:
+                    return redirect('teacher_dashboard')
+        return render(request, 'select_role.html')
+
+
+def student_dashboard(request):
+    return render(request, 'student_dashboard.html')
+
+
+def teacher_dashboard(request):
+    return render(request, 'teacher_dashboard.html')
+
+
+

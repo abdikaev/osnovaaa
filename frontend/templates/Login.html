@@ -68,10 +68,10 @@
     <!-- Форма -->
     <form method="post" action="{% url 'login' %}" class="space-y-5 sm:space-y-6">
       {% csrf_token %}
-      <!-- Имя пользователя -->
+
       <div>
-        <label for="username" class="block mb-1 text-sm font-medium">Имя пользователя</label>
-        <input id="username" name="username" type="text" placeholder="Введите имя" required class="w-full px-4 py-3 text-sm rounded-lg border border-[var(--border-color)] bg-white transition" />
+        <label for="email" class="block mb-1 text-sm font-medium">Email</label>
+        <input id="email" name="email" type="email" placeholder="Введите email" required class="w-full px-4 py-3 text-sm rounded-lg border border-[var(--border-color)] bg-white transition" />
       </div>
 
       <!-- Пароль -->
