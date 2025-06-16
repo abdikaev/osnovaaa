@@ -60,7 +60,7 @@
       <img src="{% static 'Icons/Logo.png' %}" alt="EduPath" class="h-8">
       <nav class="hidden md:flex gap-6 text-sm font-medium">
         <a href="{% url 'student_dashboard' %}" class="hover:text-[var(--brand-primary)]">Главная</a>
-        <a href="#" class="hover:text-[var(--brand-primary)]">Мои курсы</a>
+        <a href="{% url 'course_view' %}?course_id=1" class="hover:text-[var(--brand-primary)]">Мои курсы</a>
         <a href="{% url 'tutors' %}" class="hover:text-[var(--brand-primary)]">Репетиторы</a>
         <a href="#" class="hover:text-[var(--brand-primary)]">Профиль</a>
       </nav>
@@ -76,7 +76,7 @@
     <div id="mobile-menu-backdrop"></div>
     <nav id="mobile-menu" class="md:hidden">
       <a href="{% url 'student_dashboard' %}" class="p-3 hover:text-[var(--brand-primary)]">Главная</a>
-      <a href="#" class="p-3 hover:text-[var(--brand-primary)]">Мои курсы</a>
+      <a href="{% url 'course_view' %}?course_id=1" class="p-3 hover:text-[var(--brand-primary)]">Мои курсы</a>
       <a href="{% url 'tutors' %}" class="p-3 hover:text-[var(--brand-primary)]">Репетиторы</a>
       <a href="#" class="p-3 hover:text-[var(--brand-primary)]">Профиль</a>
       <div class="p-3 flex flex-col gap-3">
@@ -94,14 +94,14 @@
     <section class="bg-white py-12">
       <div class="max-w-7xl mx-auto px-4">
         <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">Ваши текущие курсы</h2>
-        <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+         <div id="current-courses" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <article class="card">
             <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="Математика" class="w-full h-40 object-cover rounded-t-lg">
             <div class="p-5">
               <h3 class="text-lg font-semibold mb-2">Математика: Подготовка к ЕГЭ</h3>
               <p class="text-[var(--text-secondary)] text-sm mb-3">Репетитор: Анна С. • 60% завершено</p>
               <div class="progress-bar mb-3"><div class="progress-bar-inner" style="width: 60%;"></div></div>
-              <a href="#" class="btn w-full text-center">Продолжить</a>
+              <a href="{% url 'video_detail' %}" class="btn w-full text-center">Продолжить</a>
             </div>
           </article>
         </div>
@@ -111,13 +111,13 @@
     <section class="bg-[var(--bg-secondary)] py-12">
       <div class="max-w-7xl mx-auto px-4">
         <h2 class="text-2xl md:text-3xl font-bold mb-8 text-center">Рекомендуемые курсы</h2>
-        <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div id="recommended-courses" class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <article class="card">
             <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="Физика" class="w-full h-40 object-cover rounded-t-lg">
             <div class="p-5">
               <h3 class="text-lg font-semibold mb-2">Физика: Основы механики</h3>
               <p class="text-[var(--text-secondary)] text-sm mb-3">Изучите законы Ньютона и кинематику.</p>
-              <a href="#" class="text-[var(--brand-primary)] hover:underline text-sm">Записаться</a>
+              <a href="#" class="text-[var(--brand-primary)] hover:underline text-sm enroll">Записаться</a>
             </div>
           </article>
         </div>
@@ -203,6 +203,87 @@
       backdrop.classList.remove('show');
       mobileBtn.setAttribute('aria-expanded', 'false');
     });
+
+    
+    // Assistant functionality
+    const assistantBtn = document.getElementById('assistant-button');
+    const assistantModal = document.getElementById('assistant-modal');
+    const closeAssistant = document.getElementById('close-assistant');
+    const chatInput = document.getElementById('chat-input');
+    const sendBtn = document.getElementById('send-button');
+    const chatContainer = document.getElementById('chat-container');
+
+    assistantBtn.addEventListener('click', () => {
+      assistantModal.classList.add('show');
+      chatInput.focus();
+    });
+    closeAssistant.addEventListener('click', () => {
+      assistantModal.classList.remove('show');
+    });
+    chatInput.addEventListener('input', () => {
+      sendBtn.disabled = chatInput.value.trim() === '';
+    });
+    sendBtn.addEventListener('click', () => {
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      const userMsg = document.createElement('div');
+      userMsg.className = 'message user-message';
+      userMsg.textContent = msg;
+      chatContainer.appendChild(userMsg);
+      chatInput.value = '';
+      sendBtn.disabled = true;
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+      setTimeout(() => {
+        const botMsg = document.createElement('div');
+        botMsg.className = 'message bot-message';
+        botMsg.textContent = 'Спасибо за ваш вопрос! Мы скоро ответим.';
+        chatContainer.appendChild(botMsg);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 1000);
+    });
+
+    // Enrollment from recommended to current
+    function attachEnrollHandlers() {
+      document.querySelectorAll('#recommended-courses .enroll').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const card = link.closest('article');
+          link.remove();
+          const progress = document.createElement('div');
+          progress.className = 'progress-bar mb-3';
+          progress.innerHTML = '<div class="progress-bar-inner" style="width: 0%;"></div>';
+          card.querySelector('.p-5').appendChild(progress);
+          const cont = document.createElement('a');
+          cont.href = "{% url 'video_detail' %}";
+          cont.className = 'btn w-full text-center';
+          cont.textContent = 'Продолжить';
+          card.querySelector('.p-5').appendChild(cont);
+          document.getElementById('current-courses').appendChild(card);
+        });
+      });
+    }
+    attachEnrollHandlers();
+
+    // Load courses created by teachers
+    function loadTeacherCourses() {
+      const saved = JSON.parse(localStorage.getItem('createdCourses') || '[]');
+      const container = document.getElementById('recommended-courses');
+      saved.forEach(c => {
+        const article = document.createElement('article');
+        article.className = 'card';
+        article.innerHTML = `
+          <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="${c.title}" class="w-full h-40 object-cover rounded-t-lg">
+          <div class="p-5">
+            <h3 class="text-lg font-semibold mb-2">${c.title}</h3>
+            <p class="text-[var(--text-secondary)] text-sm mb-3">${c.description}</p>
+            <a href="#" class="text-[var(--brand-primary)] hover:underline text-sm enroll">Записаться</a>
+          </div>`;
+        container.appendChild(article);
+      });
+      attachEnrollHandlers();
+    }
+    loadTeacherCourses();
+    
   </script>
 </body>
 </html>
