@@ -5,6 +5,16 @@
   <meta charset="UTF-8" />
   <title>О нас — EduPath</title>
   <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+    :root {
+      --color-primary: #6C4DFF;
+      --color-bg: #F9F9FB;
+      --color-bg-secondary: #EDEDED;
+      --color-text: #1C1C1E;
+      --color-text-secondary: rgba(60, 60, 67, 0.6);
+      --color-border: #D1D1D6;
+    }
+  </style>
   <script src="https://unpkg.com/css-doodle@0.36.0/css-doodle.min.js"></script>
 
   <style>
@@ -76,7 +86,7 @@
   </style>
 </head>
 <body>
-
+    {% include 'partials/header.html' %}
   <!-- Волны -->
   <div class="wave-background">
     <div class="air air1"></div>
@@ -144,9 +154,9 @@
   <footer class="bg-violet-700 text-white text-center py-4 w-full">
     <p class="text-sm">© 2025 EduPath. Все права защищены.</p>
     <div class="text-sm mt-1">
-      <a href="#" class="mx-2 hover:underline">О нас</a>
-      <a href="#" class="mx-2 hover:underline">Контакты</a>
-      <a href="#" class="mx-2 hover:underline">Условия</a>
+      <a href="{% url 'about' %}" class="mx-2 hover:underline">О нас</a>
+      <a href="{% url 'contacts' %}" class="mx-2 hover:underline">Контакты</a>
+      <a href="{% url 'terms' %}" class="mx-2 hover:underline">Условия</a>
     </div>
   </footer>
 

@@ -126,9 +126,9 @@
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
       <img src="{% static 'Icons/Logo.png' %}" alt="EduPath" class="h-8">
       <nav class="hidden md:flex gap-6 text-sm font-medium">
-        <a href="#" class="hover:text-[var(--brand-primary)]">Главная</a>
-        <a href="#" class="hover:text-[var(--brand-primary)]">Мои репетиторы</a>
-        <a href="#" class="hover:text-[var(--brand-primary)]">Курсы</a>
+         <a href="{% url 'student_dashboard' %}" class="hover:text-[var(--brand-primary)]">Главная</a>
+        <a href="{% url 'tutors' %}" class="hover:text-[var(--brand-primary)]">Мои репетиторы</a>
+        <a href="{% url 'course_view' %}?course_id=1" class="hover:text-[var(--brand-primary)]">Курсы</a>
         <a href="#" class="hover:text-[var(--brand-primary)]">Профиль</a>
       </nav>
       <div class="hidden md:flex items-center gap-3">
@@ -142,9 +142,9 @@
     </div>
     <div id="mobile-menu-backdrop"></div>
     <nav id="mobile-menu" class="md:hidden">
-      <a href="#" class="p-3 hover:text-[var(--brand-primary)]">Главная</a>
-      <a href="#" class="p-3 hover:text-[var(--brand-primary)]">Мои репетиторы</a>
-      <a href="#" class="p-3 hover:text-[var(--brand-primary)]">Курсы</a>
+      <a href="{% url 'student_dashboard' %}" class="p-3 hover:text-[var(--brand-primary)]">Главная</a>
+      <a href="{% url 'tutors' %}" class="p-3 hover:text-[var(--brand-primary)]">Мои репетиторы</a>
+      <a href="{% url 'course_view' %}?course_id=1" class="p-3 hover:text-[var(--brand-primary)]">Курсы</a>
       <a href="#" class="p-3 hover:text-[var(--brand-primary)]">Профиль</a>
       <div class="p-3 flex items-center gap-3">
         <img src="{% static 'Icons/Logo.png' %}" alt="Аватар пользователя" class="avatar w-8 h-8">

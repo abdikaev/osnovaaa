@@ -5,9 +5,20 @@
   <meta charset="UTF-8">
   <title>Условия использования — EduPath</title>
   <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+    :root {
+      --color-primary: #6C4DFF;
+      --color-bg: #F9F9FB;
+      --color-bg-secondary: #EDEDED;
+      --color-text: #1C1C1E;
+      --color-text-secondary: rgba(60, 60, 67, 0.6);
+      --color-border: #D1D1D6;
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col bg-gradient-to-br from-violet-100 to-white text-gray-800">
-
+  {% include 'partials/header.html' %}
+  
   <main class="flex-grow max-w-3xl mx-auto py-12 px-6 bg-white rounded-xl shadow-lg mt-10 mb-6">
     <h1 class="text-4xl font-bold mb-6 text-center text-violet-700">Условия использования</h1>
 

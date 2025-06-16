@@ -71,9 +71,9 @@
       <img src="{% static 'Icons/Logo.png' %}" alt="EduPath Logo" class="h-9 md:h-10" />
       <nav class="hidden md:flex space-x-8 text-sm font-medium">
         <a href="{% url 'main_menu' %}" class="text-[var(--color-text)] hover:text-[var(--color-primary)]">Главная</a>
-        <a href="#" class="text-[var(--color-text)] hover:text-[var(--color-primary)]">Курсы</a>
+        <a href="{% url 'course_view' %}?course_id=1" class="text-[var(--color-text)] hover:text-[var(--color-primary)]">Курсы</a>
         <a href="{% url 'about' %}" class="text-[var(--color-text)] hover:text-[var(--color-primary)]">О нас</a>
-        <a href="#" class="text-[var(--color-text)] hover:text-[var(--color-primary)]">Контакты</a>
+        <a href="{% url 'contacts' %}" class="text-[var(--color-text)] hover:text-[var(--color-primary)]">Контакты</a>
       </nav>
       <div class="hidden md:flex items-center gap-4">
         <button class="text-[var(--color-primary)] text-sm font-medium hover:underline">Войти</button>
@@ -84,10 +84,10 @@
       </button>
     </div>
     <nav id="mobile-menu" class="md:hidden flex flex-col px-6 pb-6 space-y-4 text-base font-medium bg-[var(--color-bg-secondary)] border-t border-[var(--color-border)] hidden">
-      <a href="#" class="hover:text-[var(--color-primary)]">Главная</a>
-      <a href="#" class="hover:text-[var(--color-primary)]">Курсы</a>
-      <a href="#" class="hover:text-[var(--color-primary)]">О нас</a>
-      <a href="#" class="hover:text-[var(--color-primary)]">Контакты</a>
+      <a href="{% url 'main_menu' %}" class="hover:text-[var(--color-primary)]">Главная</a>
+      <a href="{% url 'course_view' %}?course_id=1" class="hover:text-[var(--color-primary)]">Курсы</a>
+      <a href="{% url 'about' %}" class="hover:text-[var(--color-primary)]">О нас</a>
+      <a href="{% url 'contacts' %}" class="hover:text-[var(--color-primary)]">Контакты</a>
       <div class="flex flex-col gap-4 mt-4">
         <button class="text-[var(--color-primary)] hover:underline w-full text-left">Войти</button>
         <button class="bg-[var(--color-primary)] text-white w-full rounded-full font-semibold py-3 hover:bg-[#0051CC] shadow-sm">Регистрация</button>
@@ -99,7 +99,7 @@
   <section class="relative h-[400px] md:h-[600px] bg-cover bg-center" style="background-image: url('icons/aa8625109287767.5fd08439c7676.jpg');">
     <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-60"></div>
     <div class="relative z-10 max-w-5xl mx-auto h-full flex flex-col justify-center items-center text-center text-white px-4">
-      <a href="#" class="absolute left-4 top-6">
+      <a href="{% url 'main_menu' %}" class="absolute left-4 top-6">
         <img src="Icons/Left.png" alt="Назад" class="w-8 md:w-10 opacity-80 hover:opacity-100" />
       </a>
       <h1 class="text-4xl md:text-6xl font-bold tracking-tight Telescope: The Future of Web Inspection mb-4">SQL для начинающих</h1>

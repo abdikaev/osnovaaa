@@ -1,0 +1,43 @@
+<header class="bg-white border-b border-[var(--color-bg-secondary)] sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <img src="{% static 'Icons/Logo.png' %}" alt="EduPath Logo" class="h-9 md:h-10" />
+    <nav class="hidden md:flex space-x-8 text-sm font-medium">
+      <a href="{% url 'main_menu' %}" class="hover:text-[var(--color-primary)]">Главная</a>
+      <a href="{% url 'course_view' %}?course_id=1" class="hover:text-[var(--color-primary)]">Курсы</a>
+      <a href="{% url 'about' %}" class="hover:text-[var(--color-primary)]">О нас</a>
+      <a href="{% url 'contacts' %}" class="hover:text-[var(--color-primary)]">Контакты</a>
+    </nav>
+    <div class="hidden md:flex items-center gap-4">
+      <a href="{% url 'login' %}" class="text-[var(--color-primary)] hover:underline text-sm font-medium">Войти</a>
+      <a href="{% url 'register' %}" class="bg-[var(--color-primary)] hover:bg-indigo-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition">Регистрация</a>
+    </div>
+    <button id="mobile-btn" class="md:hidden" aria-label="Открыть меню" type="button" aria-expanded="false" aria-controls="mobile-menu">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+  <div id="mobile-menu-backdrop" tabindex="-1"></div>
+  <nav id="mobile-menu" class="md:hidden flex flex-col px-6 pb-6 space-y-4 text-base font-medium bg-white border-t border-[var(--color-bg-secondary)] z-50 relative" aria-label="Мобильное меню">
+    <a href="{% url 'main_menu' %}" class="hover:text-[var(--color-primary)]">Главная</a>
+    <a href="{% url 'course_view' %}?course_id=1" class="hover:text-[var(--color-primary)]">Курсы</a>
+    <a href="{% url 'about' %}" class="hover:text-[var(--color-primary)]">О нас</a>
+    <a href="{% url 'contacts' %}" class="hover:text-[var(--color-primary)]">Контакты</a>
+    <div class="flex flex-col gap-4 mt-4">
+      <a href="{% url 'login' %}" class="text-[var(--color-primary)] hover:underline w-full text-center">Войти</a>
+      <a href="{% url 'register' %}" class="bg-[var(--color-primary)] hover:bg-indigo-600 text-white w-full rounded-xl font-semibold transition py-3 text-center">Регистрация</a>
+    </div>
+  </nav>
+</header>
+<script>
+  const btn = document.getElementById('mobile-btn');
+  const menu = document.getElementById('mobile-menu');
+  const backdrop = document.getElementById('mobile-menu-backdrop');
+  function toggleMenu() {
+    const isOpen = menu.classList.toggle('open');
+    backdrop.classList.toggle('show', isOpen);
+    btn.setAttribute('aria-expanded', isOpen);
+  }
+  btn.addEventListener('click', toggleMenu);
+  backdrop.addEventListener('click', toggleMenu);
+</script>
