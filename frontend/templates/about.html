@@ -97,44 +97,12 @@
 
   <!-- Мелкие пузырьки -->
   <css-doodle>
-    <style>
-      @grid: 60x1 / 100vmin;
-      :container {
-        perspective: 20vmin;
-      }
+  <style>
+    @grid: 60x1 / 100vmin;
+    background: @m(...);
+  </style>
+</css-doodle>
 
-      background: @m(
-        @r(150, 200), 
-        radial-gradient(
-          @p(#00b8a9, #f8f3d4, #f6416c, #ffde7d) 10%,
-          transparent 50%
-        ) @r(100%) @r(100%) / @r(0.5%, 1.5%) @lr no-repeat
-      );
-
-      @size: 20%;
-      @place-cell: center;
-      border-radius: 50%;
-      transform-style: preserve-3d;
-      animation: scale-up 25s linear infinite;
-      animation-delay: calc(@i * -0.3s);
-
-      @keyframes scale-up {
-        0% {
-          opacity: 0;
-          transform: translate3d(0, 0, 0) rotate(0);
-        }
-        10% { opacity: 0.6; }
-        95% {
-          transform: translate3d(0, 0, @r(20vmin, 30vmin))
-                     rotate(@r(-180deg, 180deg));
-        }
-        100% {
-          opacity: 0;
-          transform: translate3d(0, 0, 1vmin);
-        }
-      }
-    </style>
-  </css-doodle>
 
   <!-- Контент -->
   <main class="flex-grow flex items-center justify-center w-full">
