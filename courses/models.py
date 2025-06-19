@@ -1,5 +1,6 @@
 from django.db import models
 from accounts.models import CustomUser
+import os
 
 class Course(models.Model):
     title = models.CharField(max_length=200)
@@ -40,3 +41,38 @@ class Enrollment(models.Model):
     
     def __str__(self):
         return f"{self.user.username} enrolled in {self.course.title}"
+
+
+class Assignment(models.Model):
+    """Homework submitted by a student for a lesson."""
+
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name="assignments")
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    text = models.TextField(blank=True)
+    file = models.FileField(upload_to="assignments/", blank=True, null=True)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    checked = models.BooleanField(default=False)
+    passed = models.BooleanField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        # If a file was uploaded and text is empty, try to extract text from the file
+        if self.file and not self.text:
+            ext = os.path.splitext(self.file.name)[1].lower()
+            try:
+                if ext == ".docx":
+                    from docx import Document
+
+                    doc = Document(self.file)
+                    self.text = "\n".join(p.text for p in doc.paragraphs)
+                elif ext in {".txt"}:
+                    self.text = self.file.read().decode("utf-8")
+            except Exception:
+                pass
+            finally:
+                if hasattr(self.file, "seek"):
+                    self.file.seek(0)
+
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"Assignment for {self.lesson} by {self.student}"

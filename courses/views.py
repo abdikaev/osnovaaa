@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, filters
-from .models import Course, Lesson, Enrollment
-from .serializers import CourseSerializer, LessonSerializer, EnrollmentSerializer
+from .models import Course, Lesson, Enrollment, Assignment
+from .serializers import CourseSerializer, LessonSerializer, EnrollmentSerializer, AssignmentSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 
 class CourseListView(generics.ListAPIView):
@@ -14,12 +14,28 @@ class CourseDetailView(generics.RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
 
+class CourseManageView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_update(self, serializer):
+        serializer.save(instructor=self.request.user)
+
+
 class LessonListView(generics.ListAPIView):
     serializer_class = LessonSerializer
     
     def get_queryset(self):
         course_id = self.kwargs['course_id']
         return Lesson.objects.filter(course_id=course_id).order_by('order')
+    
+
+class LessonDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
 
 class EnrollmentView(generics.CreateAPIView):
     serializer_class = EnrollmentSerializer
@@ -31,6 +47,23 @@ class EnrollmentView(generics.CreateAPIView):
 class UserEnrollmentsView(generics.ListAPIView):
     serializer_class = EnrollmentSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get_queryset(self):
         return Enrollment.objects.filter(user=self.request.user)
+
+
+class AssignmentCreateView(generics.CreateAPIView):
+    serializer_class = AssignmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(student=self.request.user)
+
+
+class LessonAssignmentsView(generics.ListAPIView):
+    serializer_class = AssignmentSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        lesson_id = self.kwargs["lesson_id"]
+        return Assignment.objects.filter(lesson_id=lesson_id)
