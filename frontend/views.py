@@ -97,5 +97,8 @@ def tutors_view(request):
     return render(request, 'tutors.html')
 
 
+def course_detail(request, course_id):
+    """Dynamic course detail page rendered from localStorage data."""
+    return render(request, 'course_detail.html', {'course_id': course_id})
 
 

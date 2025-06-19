@@ -153,8 +153,16 @@
               <input id="course-image" type="file" accept="image/*" class="w-full p-2 border border-[var(--border-color)] rounded-lg">
             </div>
             <div class="mb-4">
-              <label for="course-videos" class="block text-sm font-medium mb-1">Видео курса (можно выбрать несколько)</label>
-              <input id="course-videos" type="file" accept="video/*" multiple class="w-full p-2 border border-[var(--border-color)] rounded-lg">
+                            <label for="course-videos" class="block text-sm font-medium mb-1">Ссылки на видео (по одному на строке)</label>
+              <textarea id="course-videos" rows="3" class="w-full p-2 border border-[var(--border-color)] rounded-lg" placeholder="https://...\nhttps://..."></textarea>
+            </div>
+            <div class="mb-4">
+              <label for="course-text" class="block text-sm font-medium mb-1">Текстовые материалы</label>
+              <textarea id="course-text" rows="3" class="w-full p-2 border border-[var(--border-color)] rounded-lg"></textarea>
+            </div>
+            <div class="mb-4">
+              <label for="course-assignment" class="block text-sm font-medium mb-1">Задание</label>
+              <textarea id="course-assignment" rows="3" class="w-full p-2 border border-[var(--border-color)] rounded-lg"></textarea>
             </div>
             <button type="submit" class="btn w-full text-center">Создать курс</button>
           </form>
@@ -304,21 +312,22 @@
     const courseForm = document.getElementById('create-course-form');
     const coursesContainer = document.getElementById('teacher-courses');
 
-    function addCourseCard(course) {
-      const article = document.createElement('article');
-      article.className = 'card';
-      article.innerHTML = `
-        <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="Course" class="w-full h-40 object-cover rounded-t-lg">
-        <div class="p-5">
-          <h3 class="text-lg font-semibold mb-2">${course.title}</h3>
-          <p class="text-[var(--text-secondary)] text-sm mb-3">0 студентов</p>
-          <div class="flex gap-2">
-            <a href="#" class="btn w-full text-center">Редактировать</a>
-            <a href="#" class="btn w-full bg-red-500 hover:bg-red-600">Удалить</a>
-          </div>
-        </div>`;
-      coursesContainer.appendChild(article);
-    }
+      function addCourseCard(course) {
+        const article = document.createElement('article');
+        article.className = 'card';
+        article.dataset.courseId = course.id;
+        article.innerHTML = `
+          <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="Course" class="w-full h-40 object-cover rounded-t-lg">
+          <div class="p-5">
+            <h3 class="text-lg font-semibold mb-2">${course.title}</h3>
+            <p class="text-[var(--text-secondary)] text-sm mb-3">0 студентов</p>
+            <div class="flex gap-2">
+              <a href="/course/${course.id}/" class="btn w-full text-center">Открыть</a>
+              <a href="#" class="btn w-full bg-red-500 hover:bg-red-600">Удалить</a>
+            </div>
+          </div>`;
+        coursesContainer.appendChild(article);
+      }
 
     function loadCourses() {
       const saved = JSON.parse(localStorage.getItem('createdCourses') || '[]');
@@ -327,16 +336,19 @@
 
     courseForm.addEventListener('submit', e => {
       e.preventDefault();
-      const title = document.getElementById('course-title').value.trim();
-      const description = document.getElementById('course-description').value.trim();
-      if (!title) return;
-      const newCourse = { title, description };
-      const saved = JSON.parse(localStorage.getItem('createdCourses') || '[]');
-      saved.push(newCourse);
-      localStorage.setItem('createdCourses', JSON.stringify(saved));
-      addCourseCard(newCourse);
-      courseForm.reset();
-    });
+        const title = document.getElementById('course-title').value.trim();
+        const description = document.getElementById('course-description').value.trim();
+        const videos = document.getElementById('course-videos').value.split('\n').map(v => v.trim()).filter(v=>v);
+        const text = document.getElementById('course-text').value.trim();
+        const assignment = document.getElementById('course-assignment').value.trim();
+        if (!title) return;
+        const newCourse = { id: Date.now(), title, description, videos, text, assignment };
+        const saved = JSON.parse(localStorage.getItem('createdCourses') || '[]');
+        saved.push(newCourse);
+        localStorage.setItem('createdCourses', JSON.stringify(saved));
+        addCourseCard(newCourse);
+        courseForm.reset();
+      });
 
     loadCourses();
   </script>

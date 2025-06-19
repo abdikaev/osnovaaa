@@ -243,46 +243,82 @@
     });
 
     // Enrollment from recommended to current
-    function attachEnrollHandlers() {
-      document.querySelectorAll('#recommended-courses .enroll').forEach(link => {
-        link.addEventListener('click', e => {
-          e.preventDefault();
-          const card = link.closest('article');
-          link.remove();
-          const progress = document.createElement('div');
-          progress.className = 'progress-bar mb-3';
-          progress.innerHTML = '<div class="progress-bar-inner" style="width: 0%;"></div>';
-          card.querySelector('.p-5').appendChild(progress);
-          const cont = document.createElement('a');
-          cont.href = "{% url 'video_detail' %}";
-          cont.className = 'btn w-full text-center';
-          cont.textContent = 'Продолжить';
-          card.querySelector('.p-5').appendChild(cont);
-          document.getElementById('current-courses').appendChild(card);
+      function attachEnrollHandlers() {
+        document.querySelectorAll('#recommended-courses .enroll').forEach(link => {
+          link.addEventListener('click', e => {
+            e.preventDefault();
+            const card = link.closest('article');
+            link.remove();
+            const progress = document.createElement('div');
+            progress.className = 'progress-bar mb-3';
+            progress.innerHTML = '<div class="progress-bar-inner" style="width: 0%;"></div>';
+            card.querySelector('.p-5').appendChild(progress);
+            const id = card.dataset.courseId;
+            const cont = document.createElement('a');
+            cont.href = '/course/' + id + '/';
+            cont.className = 'btn w-full text-center';
+            cont.textContent = 'Продолжить';
+            card.querySelector('.p-5').appendChild(cont);
+            document.getElementById('current-courses').appendChild(card);
+            const enrolled = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+            if(!enrolled.includes(id)) enrolled.push(id);
+            localStorage.setItem('enrolledCourses', JSON.stringify(enrolled));
+            localStorage.setItem('courseProgress:'+id, 0);
+          });
         });
-      });
-    }
+      }
     attachEnrollHandlers();
 
     // Load courses created by teachers
-    function loadTeacherCourses() {
-      const saved = JSON.parse(localStorage.getItem('createdCourses') || '[]');
-      const container = document.getElementById('recommended-courses');
-      saved.forEach(c => {
-        const article = document.createElement('article');
-        article.className = 'card';
-        article.innerHTML = `
-          <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="${c.title}" class="w-full h-40 object-cover rounded-t-lg">
-          <div class="p-5">
-            <h3 class="text-lg font-semibold mb-2">${c.title}</h3>
-            <p class="text-[var(--text-secondary)] text-sm mb-3">${c.description}</p>
-            <a href="#" class="text-[var(--brand-primary)] hover:underline text-sm enroll">Записаться</a>
-          </div>`;
-        container.appendChild(article);
-      });
-      attachEnrollHandlers();
-    }
-    loadTeacherCourses();
+      function loadTeacherCourses() {
+        const saved = JSON.parse(localStorage.getItem('createdCourses') || '[]');
+        const enrolled = JSON.parse(localStorage.getItem('enrolledCourses') || '[]');
+        const rec = document.getElementById('recommended-courses');
+        const cur = document.getElementById('current-courses');
+        saved.forEach(c => {
+          const article = document.createElement('article');
+          article.className = 'card';
+          article.dataset.courseId = c.id;
+          article.innerHTML = `
+            <img src="{% static 'Icons/aa8625109287767.5fd08439c7676.jpg' %}" alt="${c.title}" class="w-full h-40 object-cover rounded-t-lg">
+            <div class="p-5">
+              <h3 class="text-lg font-semibold mb-2">${c.title}</h3>
+              <p class="text-[var(--text-secondary)] text-sm mb-3">${c.description}</p>
+            </div>`;
+          if(enrolled.includes(String(c.id))){
+            const progress = document.createElement('div');
+            progress.className='progress-bar mb-3';
+            progress.innerHTML='<div class="progress-bar-inner" style="width:0%"></div>';
+            article.querySelector('.p-5').appendChild(progress);
+            const cont=document.createElement('a');
+            cont.href='/course/'+c.id+'/';
+            cont.className='btn w-full text-center';
+            cont.textContent='Продолжить';
+            article.querySelector('.p-5').appendChild(cont);
+            cur.appendChild(article);
+          }else{
+            const enroll = document.createElement('a');
+            enroll.href='#';
+            enroll.className='text-[var(--brand-primary)] hover:underline text-sm enroll';
+            enroll.textContent='Записаться';
+            article.querySelector('.p-5').appendChild(enroll);
+            rec.appendChild(article);
+          }
+        });
+        attachEnrollHandlers();
+      }
+
+      function updateProgressBars() {
+        document.querySelectorAll('[data-course-id]').forEach(card => {
+          const id = card.dataset.courseId;
+          const p = localStorage.getItem('courseProgress:'+id) || 0;
+          const bar = card.querySelector('.progress-bar-inner');
+          if(bar) bar.style.width = p + '%';
+        });
+      }
+
+      loadTeacherCourses();
+      updateProgressBars();
     
   </script>
 </body>

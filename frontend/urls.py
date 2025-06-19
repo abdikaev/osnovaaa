@@ -21,5 +21,6 @@ urlpatterns = [
     path('course/video/', TemplateView.as_view(template_name='video_detail.html'), name='video_detail'),
     path('course/video2/', TemplateView.as_view(template_name='video_detail2.html'), name='video_detail2'),
     path('course/video3/', TemplateView.as_view(template_name='video_detail3.html'), name='video_detail3'),
+    path('course/<int:course_id>/', views.course_detail, name='course_detail'),
 ]
 

@@ -1,0 +1,101 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Курс</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+  <header class="bg-white border-b">
+    <div class="max-w-5xl mx-auto p-4 flex justify-between items-center">
+      <a href="{% url 'main_menu' %}" class="text-indigo-600">Главная</a>
+      <span id="course-title" class="font-semibold"></span>
+    </div>
+  </header>
+  <main id="course-content" class="flex-1 max-w-5xl mx-auto p-4 space-y-8"></main>
+  <footer class="bg-white border-t p-4 text-center text-sm text-gray-500">EduPath</footer>
+<script>
+const id = window.location.pathname.split('/').filter(Boolean).pop();
+const courses = JSON.parse(localStorage.getItem('createdCourses') || '[]');
+const course = courses.find(c => String(c.id) === id);
+const container = document.getElementById('course-content');
+if(!course){
+  container.textContent = 'Курс не найден';
+}else{
+  document.getElementById('course-title').textContent = course.title;
+  document.title = course.title;
+  const videos = course.videos || [];
+  const watched = JSON.parse(localStorage.getItem('courseProgressData:'+id) || '[]');
+  function saveProgress(){
+    const p = videos.length? Math.round(watched.length / videos.length * 100):0;
+    localStorage.setItem('courseProgress:'+id, p);
+    localStorage.setItem('courseProgressData:'+id, JSON.stringify(watched));
+  }
+  videos.forEach((v,idx)=>{
+    const section = document.createElement('section');
+    section.className = 'bg-white p-4 rounded shadow';
+    section.innerHTML = `<div class="aspect-video mb-2"><iframe class="w-full h-full" src="${v}" allowfullscreen></iframe></div>`;
+    const btn = document.createElement('button');
+    btn.textContent = watched.includes(idx)?'Просмотрено':'Отметить просмотренным';
+    btn.className='px-4 py-2 rounded bg-indigo-600 text-white';
+    btn.onclick=()=>{
+      if(!watched.includes(idx)){
+        watched.push(idx);
+        btn.textContent='Просмотрено';
+        saveProgress();
+      }
+    };
+    section.appendChild(btn);
+    container.appendChild(section);
+  });
+  if(course.text){
+    const text = document.createElement('div');
+    text.className='bg-white p-4 rounded shadow';
+    text.innerHTML = `<h2 class="font-semibold mb-2">Материалы</h2><p>${course.text}</p>`;
+    container.appendChild(text);
+  }
+  if(course.assignment){
+    const ass = document.createElement('div');
+    ass.className='bg-white p-4 rounded shadow';
+    ass.innerHTML = `<h2 class="font-semibold mb-2">Задание</h2><p>${course.assignment}</p>`;
+    container.appendChild(ass);
+  }
+  const questions = course.test || [];
+  if(!questions.length){
+    for(let i=0;i<5;i++){
+      questions.push({q:`Вопрос ${i+1} по теме ${course.title}?`,a:['A','B','C'],c:0});
+    }
+    course.test=questions;localStorage.setItem('createdCourses',JSON.stringify(courses));
+  }
+  const quiz=document.createElement('div');
+  quiz.className='bg-white p-4 rounded shadow';
+  quiz.innerHTML='<h2 class="font-semibold mb-4">Тест</h2>';
+  questions.forEach((q,i)=>{
+    const block=document.createElement('div');
+    block.className='mb-4';
+    block.innerHTML=`<p class="mb-2">${q.q}</p>`+q.a.map((opt,j)=>`<label class="block"><input type="radio" name="q${i}" value="${j}" class="mr-2">${opt}</label>`).join('');
+    quiz.appendChild(block);
+  });
+  const result=document.createElement('p');
+  result.className='mt-2';
+  const btn=document.createElement('button');
+  btn.textContent='Проверить ответы';
+  btn.className='px-4 py-2 rounded bg-indigo-600 text-white';
+  btn.onclick=()=>{
+    let correct=0;
+    questions.forEach((q,i)=>{
+      const val=document.querySelector(`input[name=q${i}]:checked`);
+      if(val&&Number(val.value)===q.c)correct++;
+    });
+    result.textContent=`Результат: ${correct} из ${questions.length}`;
+  };
+  quiz.appendChild(btn);
+  quiz.appendChild(result);
+  container.appendChild(quiz);
+  saveProgress();
+}
+</script>
+</body>
+</html>
