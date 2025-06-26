@@ -25,3 +25,11 @@ class UserProfile(models.Model):
     
     def __str__(self):
         return f"{self.user.username}'s profile"
+    
+class TeacherProfile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=100, blank=True)
+    level = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.nickname or self.user.email

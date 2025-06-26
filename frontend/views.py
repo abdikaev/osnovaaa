@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from accounts.models import TeacherProfile  # обязательно импорт профиля
 
 User = get_user_model()
 
@@ -48,14 +49,14 @@ def register(request):
 
         user = User.objects.create_user(username=username, email=email, password=password1)
         login(request, user)
-        return redirect('select_role')
+        return redirect('main_menu')
 
     return render(request, 'Register.html')
 
 
 # Страница курса
 def course_view(request):
-    return render(request, 'CourseView.html')  # исправлено название шаблона
+    return render(request, 'CourseView.html')
 
 
 # Статические страницы футера
@@ -69,36 +70,61 @@ def terms_view(request):
     return render(request, 'terms.html')
 
 
-
 # Страница выбора роли
 def select_role(request):
-        if request.method == 'POST':
-            role = request.POST.get('role')
-            if role in ['student', 'teacher']:
-                request.user.role = role
-                request.user.save()
-                if role == 'student':
-                    return redirect('student_dashboard')
-                else:
-                    return redirect('teacher_dashboard')
-        return render(request, 'select_role.html')
+    if request.method == 'POST':
+        role = request.POST.get('role')
+        if role in ['student', 'teacher']:
+            request.user.role = role
+            request.user.save()
+            if role == 'student':
+                return redirect('student_dashboard')
+            else:
+                return redirect('teacher_dashboard')
+    return render(request, 'select_role.html')
 
 
+# Панель студента
 def student_dashboard(request):
     return render(request, 'student_dashboard.html')
 
 
+# Панель преподавателя
+@login_required
 def teacher_dashboard(request):
-    return render(request, 'teacher_dashboard.html')
+    profile = getattr(request.user, 'teacherprofile', None)
+    return render(request, 'teacher_dashboard.html', {'profile': profile})
 
 
+# Каталог репетиторов
 def tutors_view(request):
-    """Display the tutors catalog for students."""
     return render(request, 'tutors.html')
 
 
+# Детали курса
 def course_detail(request, course_id):
-    """Dynamic course detail page rendered from localStorage data."""
     return render(request, 'course_detail.html', {'course_id': course_id})
 
 
+# Профиль пользователя (студента или преподавателя)
+@login_required
+def profile(request):
+    user = request.user
+    try:
+        profile = user.teacherprofile
+        nickname = profile.nickname
+        bio = profile.bio
+        level = profile.level
+        about = profile.about
+    except:
+        nickname = user.username
+        bio = ''
+        level = 0
+        about = ''
+
+    return render(request, 'profile.html', {  # ← просто 'profile.html'
+        'nickname': nickname,
+        'bio': bio,
+        'level': level,
+        'about': about,
+    })
