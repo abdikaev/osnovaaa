@@ -1,6 +1,8 @@
 from django.db import models
 from accounts.models import CustomUser
 import os
+from django.contrib.auth.models import User
+
 
 class Course(models.Model):
     title = models.CharField(max_length=200)
@@ -76,3 +78,12 @@ class Assignment(models.Model):
 
     def __str__(self):
         return f"Assignment for {self.lesson} by {self.student}"
+    
+    class Profile(models.Model):
+        user = models.OneToOneField(User, on_delete=models.CASCADE)
+        points = models.IntegerField(default=0)  # Очки
+        badges = models.IntegerField(default=0)  # Значки
+        friends = models.IntegerField(default=0)  # Друзья
+
+    def __str__(self):
+        return self.user.username
